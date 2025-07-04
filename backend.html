@@ -1,0 +1,3179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Todo List - Complete Backend Setup Guide</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        .code-block {
+            background-color: #1a1a1a;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+        .file-structure {
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .step-number {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .section-header {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .highlight-box {
+            background: linear-gradient(45deg, #667eea20, #764ba220);
+            border: 1px solid #667eea40;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .warning-box {
+            background: linear-gradient(45deg, #f093fb20, #f5576c20);
+            border: 1px solid #f093fb40;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .success-box {
+            background: linear-gradient(45deg, #4facfe20, #00f2fe20);
+            border: 1px solid #4facfe40;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <div class="max-w-6xl mx-auto p-6">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold section-header mb-4">
+                <i class="fas fa-tasks mr-3"></i>Smart Todo List Backend Setup
+            </h1>
+            <p class="text-xl text-gray-600">Complete Django REST API with Supabase Integration & AI Enhancement</p>
+        </div>
+
+        <!-- Table of Contents -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">
+                <i class="fas fa-list mr-2"></i>Table of Contents
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <ul class="space-y-2">
+                        <li><a href="#overview" class="text-blue-600 hover:text-blue-800">1. Project Overview</a></li>
+                        <li><a href="#setup" class="text-blue-600 hover:text-blue-800">2. Initial Setup</a></li>
+                        <li><a href="#supabase" class="text-blue-600 hover:text-blue-800">3. Supabase Configuration</a></li>
+                        <li><a href="#models" class="text-blue-600 hover:text-blue-800">4. Django Models</a></li>
+                        <li><a href="#api" class="text-blue-600 hover:text-blue-800">5. REST API Endpoints</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <ul class="space-y-2">
+                        <li><a href="#ai" class="text-blue-600 hover:text-blue-800">6. AI Integration Module</a></li>
+                        <li><a href="#frontend" class="text-blue-600 hover:text-blue-800">7. Frontend Integration</a></li>
+                        <li><a href="#deployment" class="text-blue-600 hover:text-blue-800">8. Deployment Guide</a></li>
+                        <li><a href="#testing" class="text-blue-600 hover:text-blue-800">9. Testing & Validation</a></li>
+                        <li><a href="#troubleshooting" class="text-blue-600 hover:text-blue-800">10. Troubleshooting</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Overview -->
+        <div id="overview" class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-6 section-header">
+                <div class="step-number mr-4">1</div>
+                Project Overview
+            </h2>
+            
+            <div class="highlight-box">
+                <h3 class="text-xl font-semibold mb-4">
+                    <i class="fas fa-rocket mr-2"></i>Technology Stack
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="text-center">
+                        <i class="fab fa-python text-4xl text-blue-600 mb-2"></i>
+                        <p class="font-semibold">Django REST Framework</p>
+                        <p class="text-sm text-gray-600">Backend API</p>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-database text-4xl text-green-600 mb-2"></i>
+                        <p class="font-semibold">Supabase PostgreSQL</p>
+                        <p class="text-sm text-gray-600">Database</p>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-brain text-4xl text-purple-600 mb-2"></i>
+                        <p class="font-semibold">AI Enhancement</p>
+                        <p class="text-sm text-gray-600">Smart Features</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="file-structure">
+                <h3 class="text-xl font-semibold mb-4">
+                    <i class="fas fa-folder-tree mr-2"></i>Project Structure
+                </h3>
+                <div class="code-block">
+smart_todo_backend/
+├── manage.py
+├── requirements.txt
+├── .env
+├── smart_todo/
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   ├── wsgi.py
+│   └── asgi.py
+├── apps/
+│   ├── __init__.py
+│   ├── tasks/
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   ├── serializers.py
+│   │   ├── views.py
+│   │   ├── urls.py
+│   │   └── migrations/
+│   ├── context/
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   ├── serializers.py
+│   │   ├── views.py
+│   │   └── urls.py
+│   └── ai_module/
+│       ├── __init__.py
+│       ├── task_enhancer.py
+│       ├── priority_scorer.py
+│       ├── deadline_predictor.py
+│       └── category_recommender.py
+├── utils/
+│   ├── __init__.py
+│   ├── supabase_client.py
+│   └── ai_helpers.py
+└── static/
+    └── frontend/
+        └── index.html
+                </div>
+            </div>
+        </div>
+
+        <!-- Initial Setup -->
+        <div id="setup" class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-6 section-header">
+                <div class="step-number mr-4">2</div>
+                Initial Setup
+            </h2>
+
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-download mr-2"></i>1. Create Virtual Environment
+                    </h3>
+                    <div class="code-block">
+# Create and activate virtual environment
+python -m venv smart_todo_env
+source smart_todo_env/bin/activate  # On Windows: smart_todo_env\Scripts\activate
+
+# Create project directory
+mkdir smart_todo_backend
+cd smart_todo_backend
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-box mr-2"></i>2. Install Dependencies
+                    </h3>
+                    <div class="code-block">
+# requirements.txt
+Django==4.2.7
+djangorestframework==3.14.0
+django-cors-headers==4.3.1
+python-decouple==3.8
+psycopg2-binary==2.9.9
+supabase==2.0.2
+openai==1.3.7
+numpy==1.24.3
+pandas==2.1.3
+scikit-learn==1.3.2
+celery==5.3.4
+redis==5.0.1
+gunicorn==21.2.0
+                    </div>
+                    <div class="code-block">
+# Install dependencies
+pip install -r requirements.txt
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-cog mr-2"></i>3. Create Django Project
+                    </h3>
+                    <div class="code-block">
+# Create Django project
+django-admin startproject smart_todo .
+
+# Create apps
+python manage.py startapp apps.tasks
+python manage.py startapp apps.context
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-key mr-2"></i>4. Environment Configuration
+                    </h3>
+                    <div class="code-block">
+# .env file
+DEBUG=True
+SECRET_KEY=your-secret-key-here
+DATABASE_URL=postgresql://username:password@localhost/smart_todo
+
+# Supabase Configuration
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_KEY=your-supabase-service-key
+
+# AI Configuration
+OPENAI_API_KEY=your-openai-api-key
+AI_MODEL=gpt-3.5-turbo
+
+# Redis Configuration (for Celery)
+REDIS_URL=redis://localhost:6379/0
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Supabase Configuration -->
+        <div id="supabase" class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-6 section-header">
+                <div class="step-number mr-4">3</div>
+                Supabase Configuration
+            </h2>
+
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-database mr-2"></i>1. Supabase Client Setup
+                    </h3>
+                    <div class="code-block">
+# utils/supabase_client.py
+import os
+from supabase import create_client, Client
+from decouple import config
+
+SUPABASE_URL = config('SUPABASE_URL')
+SUPABASE_KEY = config('SUPABASE_KEY')
+SUPABASE_SERVICE_KEY = config('SUPABASE_SERVICE_KEY')
+
+# Create Supabase client
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+admin_supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+
+class SupabaseManager:
+    def __init__(self):
+        self.client = supabase
+        self.admin_client = admin_supabase
+    
+    def get_client(self, admin=False):
+        """Get Supabase client instance"""
+        return self.admin_client if admin else self.client
+    
+    def execute_query(self, query, params=None, admin=False):
+        """Execute raw SQL query"""
+        client = self.get_client(admin)
+        try:
+            result = client.rpc('execute_sql', {
+                'query': query,
+                'params': params or {}
+            })
+            return result
+        except Exception as e:
+            print(f"Database query error: {e}")
+            return None
+    
+    def get_tasks(self, user_id=None, filters=None):
+        """Get tasks with optional filtering"""
+        query = self.client.table('tasks').select('*')
+        
+        if user_id:
+            query = query.eq('user_id', user_id)
+        
+        if filters:
+            for key, value in filters.items():
+                if key == 'status':
+                    query = query.eq('status', value)
+                elif key == 'priority':
+                    query = query.eq('priority', value)
+                elif key == 'search':
+                    query = query.ilike('title', f'%{value}%')
+        
+        return query.execute()
+    
+    def create_task(self, task_data):
+        """Create new task"""
+        return self.client.table('tasks').insert(task_data).execute()
+    
+    def update_task(self, task_id, task_data):
+        """Update existing task"""
+        return self.client.table('tasks').update(task_data).eq('id', task_id).execute()
+    
+    def delete_task(self, task_id):
+        """Delete task"""
+        return self.client.table('tasks').delete().eq('id', task_id).execute()
+
+# Initialize global manager
+supabase_manager = SupabaseManager()
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-table mr-2"></i>2. Database Schema
+                    </h3>
+                    <div class="code-block">
+-- SQL Schema for Supabase
+-- Create tasks table
+CREATE TABLE tasks (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    priority VARCHAR(20) DEFAULT 'medium' CHECK (priority IN ('low', 'medium', 'high')),
+    status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'in_progress', 'completed')),
+    deadline DATE,
+    category VARCHAR(100),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    user_id UUID REFERENCES auth.users(id),
+    ai_enhanced BOOLEAN DEFAULT FALSE,
+    ai_score FLOAT DEFAULT 0.0
+);
+
+-- Create context table
+CREATE TABLE context (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id),
+    work_schedule JSONB,
+    preferences JSONB,
+    productivity_patterns JSONB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create AI suggestions table
+CREATE TABLE ai_suggestions (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    task_id UUID REFERENCES tasks(id),
+    suggestion_type VARCHAR(50),
+    original_value TEXT,
+    suggested_value TEXT,
+    confidence_score FLOAT,
+    applied BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create indexes
+CREATE INDEX idx_tasks_user_id ON tasks(user_id);
+CREATE INDEX idx_tasks_status ON tasks(status);
+CREATE INDEX idx_tasks_priority ON tasks(priority);
+CREATE INDEX idx_tasks_deadline ON tasks(deadline);
+CREATE INDEX idx_context_user_id ON context(user_id);
+CREATE INDEX idx_ai_suggestions_task_id ON ai_suggestions(task_id);
+
+-- Create RLS policies
+ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE context ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ai_suggestions ENABLE ROW LEVEL SECURITY;
+
+-- Tasks policies
+CREATE POLICY "Users can view their own tasks" ON tasks
+    FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can create their own tasks" ON tasks
+    FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update their own tasks" ON tasks
+    FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete their own tasks" ON tasks
+    FOR DELETE USING (auth.uid() = user_id);
+
+-- Context policies
+CREATE POLICY "Users can view their own context" ON context
+    FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can create their own context" ON context
+    FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update their own context" ON context
+    FOR UPDATE USING (auth.uid() = user_id);
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-wrench mr-2"></i>3. Django Settings Configuration
+                    </h3>
+                    <div class="code-block">
+# smart_todo/settings.py
+import os
+from decouple import config
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Security settings
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.vercel.app', '.herokuapp.com']
+
+# Application definition
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders',
+    'apps.tasks',
+    'apps.context',
+]
+
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'smart_todo.urls'
+
+# Database configuration
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT', default='5432'),
+    }
+}
+
+# REST Framework configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+}
+
+# CORS settings
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://your-frontend-domain.com",
+]
+
+# Celery configuration
+CELERY_BROKER_URL = config('REDIS_URL')
+CELERY_RESULT_BACKEND = config('REDIS_URL')
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+# Supabase configuration
+SUPABASE_URL = config('SUPABASE_URL')
+SUPABASE_KEY = config('SUPABASE_KEY')
+SUPABASE_SERVICE_KEY = config('SUPABASE_SERVICE_KEY')
+
+# AI Configuration
+OPENAI_API_KEY = config('OPENAI_API_KEY')
+AI_MODEL = config('AI_MODEL', default='gpt-3.5-turbo')
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Django Models -->
+        <div id="models" class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-6 section-header">
+                <div class="step-number mr-4">4</div>
+                Django Models
+            </h2>
+
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-tasks mr-2"></i>1. Task Model
+                    </h3>
+                    <div class="code-block">
+# apps/tasks/models.py
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
+import uuid
+
+class Task(models.Model):
+    PRIORITY_CHOICES = [
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+    ]
+    
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+    ]
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='medium')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    deadline = models.DateField(null=True, blank=True)
+    category = models.CharField(max_length=100, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tasks')
+    ai_enhanced = models.BooleanField(default=False)
+    ai_score = models.FloatField(default=0.0)
+    
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['user', 'status']),
+            models.Index(fields=['priority']),
+            models.Index(fields=['deadline']),
+        ]
+    
+    def __str__(self):
+        return f"{self.title} - {self.priority}"
+    
+    @property
+    def is_overdue(self):
+        if self.deadline and self.status != 'completed':
+            return timezone.now().date() > self.deadline
+        return False
+    
+    @property
+    def days_until_deadline(self):
+        if self.deadline:
+            delta = self.deadline - timezone.now().date()
+            return delta.days
+        return None
+    
+    def save(self, *args, **kwargs):
+        self.updated_at = timezone.now()
+        super().save(*args, **kwargs)
+
+class TaskHistory(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='history')
+    field_name = models.CharField(max_length=50)
+    old_value = models.TextField(blank=True)
+    new_value = models.TextField(blank=True)
+    changed_at = models.DateTimeField(auto_now_add=True)
+    changed_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    class Meta:
+        ordering = ['-changed_at']
+
+class AITask(models.Model):
+    task = models.OneToOneField(Task, on_delete=models.CASCADE, related_name='ai_data')
+    original_title = models.CharField(max_length=255)
+    suggested_title = models.CharField(max_length=255, blank=True)
+    title_confidence = models.FloatField(default=0.0)
+    
+    original_description = models.TextField()
+    suggested_description = models.TextField(blank=True)
+    description_confidence = models.FloatField(default=0.0)
+    
+    suggested_priority = models.CharField(max_length=20, blank=True)
+    priority_confidence = models.FloatField(default=0.0)
+    
+    suggested_deadline = models.DateField(null=True, blank=True)
+    deadline_confidence = models.FloatField(default=0.0)
+    
+    suggested_category = models.CharField(max_length=100, blank=True)
+    category_confidence = models.FloatField(default=0.0)
+    
+    processed_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"AI Enhancement for {self.task.title}"
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-user-cog mr-2"></i>2. Context Model
+                    </h3>
+                    <div class="code-block">
+# apps/context/models.py
+from django.db import models
+from django.contrib.auth.models import User
+import uuid
+
+class UserContext(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='context')
+    
+    # Work schedule
+    work_schedule = models.JSONField(default=dict, blank=True)
+    
+    # User preferences
+    preferences = models.JSONField(default=dict, blank=True)
+    
+    # Productivity patterns
+    productivity_patterns = models.JSONField(default=dict, blank=True)
+    
+    # Personal information
+    time_zone = models.CharField(max_length=50, default='UTC')
+    work_hours_start = models.TimeField(null=True, blank=True)
+    work_hours_end = models.TimeField(null=True, blank=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"Context for {self.user.username}"
+    
+    def get_work_schedule(self):
+        """Get formatted work schedule"""
+        default_schedule = {
+            'monday': {'start': '09:00', 'end': '17:00', 'active': True},
+            'tuesday': {'start': '09:00', 'end': '17:00', 'active': True},
+            'wednesday': {'start': '09:00', 'end': '17:00', 'active': True},
+            'thursday': {'start': '09:00', 'end': '17:00', 'active': True},
+            'friday': {'start': '09:00', 'end': '17:00', 'active': True},
+            'saturday': {'start': '09:00', 'end': '17:00', 'active': False},
+            'sunday': {'start': '09:00', 'end': '17:00', 'active': False},
+        }
+        return self.work_schedule or default_schedule
+    
+    def get_preferences(self):
+        """Get user preferences with defaults"""
+        default_preferences = {
+            'notification_enabled': True,
+            'email_reminders': True,
+            'default_priority': 'medium',
+            'auto_deadline': True,
+            'ai_suggestions': True,
+            'theme': 'light',
+        }
+        return {**default_preferences, **self.preferences}
+    
+    def update_productivity_pattern(self, task_data):
+        """Update productivity patterns based on task completion"""
+        if not self.productivity_patterns:
+            self.productivity_patterns = {}
+        
+        # Track completion times
+        if 'completion_times' not in self.productivity_patterns:
+            self.productivity_patterns['completion_times'] = {}
+        
+        # Track priority preferences
+        if 'priority_distribution' not in self.productivity_patterns:
+            self.productivity_patterns['priority_distribution'] = {
+                'low': 0, 'medium': 0, 'high': 0
+            }
+        
+        # Update patterns
+        priority = task_data.get('priority', 'medium')
+        self.productivity_patterns['priority_distribution'][priority] += 1
+        
+        self.save()
+
+class ContextHistory(models.Model):
+    context = models.ForeignKey(UserContext, on_delete=models.CASCADE, related_name='history')
+    field_name = models.CharField(max_length=50)
+    old_value = models.JSONField(blank=True)
+    new_value = models.JSONField(blank=True)
+    changed_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-changed_at']
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-list-ul mr-2"></i>3. Serializers
+                    </h3>
+                    <div class="code-block">
+# apps/tasks/serializers.py
+from rest_framework import serializers
+from .models import Task, TaskHistory, AITask
+
+class TaskSerializer(serializers.ModelSerializer):
+    days_until_deadline = serializers.ReadOnlyField()
+    is_overdue = serializers.ReadOnlyField()
+    
+    class Meta:
+        model = Task
+        fields = [
+            'id', 'title', 'description', 'priority', 'status', 
+            'deadline', 'category', 'created_at', 'updated_at',
+            'ai_enhanced', 'ai_score', 'days_until_deadline', 'is_overdue'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at', 'ai_enhanced', 'ai_score']
+    
+    def validate_deadline(self, value):
+        if value and value < timezone.now().date():
+            raise serializers.ValidationError("Deadline cannot be in the past.")
+        return value
+
+class TaskCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ['title', 'description', 'priority', 'deadline', 'category']
+    
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
+
+class TaskUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ['title', 'description', 'priority', 'status', 'deadline', 'category']
+
+class AITaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AITask
+        fields = '__all__'
+        read_only_fields = ['processed_at']
+
+# apps/context/serializers.py
+from rest_framework import serializers
+from .models import UserContext
+
+class UserContextSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserContext
+        fields = [
+            'id', 'work_schedule', 'preferences', 'productivity_patterns',
+            'time_zone', 'work_hours_start', 'work_hours_end',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']
+
+class ContextUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserContext
+        fields = [
+            'work_schedule', 'preferences', 'time_zone', 
+            'work_hours_start', 'work_hours_end'
+        ]
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- REST API Endpoints -->
+        <div id="api" class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-6 section-header">
+                <div class="step-number mr-4">5</div>
+                REST API Endpoints
+            </h2>
+
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-route mr-2"></i>1. URL Configuration
+                    </h3>
+                    <div class="code-block">
+# smart_todo/urls.py
+from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api/tasks/', include('apps.tasks.urls')),
+    path('api/context/', include('apps.context.urls')),
+    path('api/ai/', include('apps.ai_module.urls')),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+# apps/tasks/urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.TaskListCreateView.as_view(), name='task-list-create'),
+    path('<uuid:pk>/', views.TaskDetailView.as_view(), name='task-detail'),
+    path('<uuid:pk>/ai-enhance/', views.AIEnhanceTaskView.as_view(), name='ai-enhance-task'),
+    path('bulk-actions/', views.BulkActionsView.as_view(), name='bulk-actions'),
+    path('analytics/', views.TaskAnalyticsView.as_view(), name='task-analytics'),
+]
+
+# apps/context/urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.ContextView.as_view(), name='context-detail'),
+    path('update/', views.ContextUpdateView.as_view(), name='context-update'),
+]
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-code mr-2"></i>2. Task Views
+                    </h3>
+                    <div class="code-block">
+# apps/tasks/views.py
+from rest_framework import generics, status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
+from django.db.models import Q, Count
+from django.utils import timezone
+from .models import Task, AITask
+from .serializers import TaskSerializer, TaskCreateSerializer, TaskUpdateSerializer
+from apps.ai_module.task_enhancer import TaskEnhancer
+from utils.supabase_client import supabase_manager
+
+class TaskListCreateView(generics.ListCreateAPIView):
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Task.objects.filter(user=user)
+        
+        # Apply filters
+        status_filter = self.request.query_params.get('status', None)
+        priority_filter = self.request.query_params.get('priority', None)
+        search = self.request.query_params.get('search', None)
+        
+        if status_filter:
+            queryset = queryset.filter(status=status_filter)
+        if priority_filter:
+            queryset = queryset.filter(priority=priority_filter)
+        if search:
+            queryset = queryset.filter(
+                Q(title__icontains=search) | Q(description__icontains=search)
+            )
+        
+        # Apply ordering
+        ordering = self.request.query_params.get('ordering', '-created_at')
+        queryset = queryset.order_by(ordering)
+        
+        return queryset
+    
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return TaskCreateSerializer
+        return TaskSerializer
+    
+    def perform_create(self, serializer):
+        task = serializer.save(user=self.request.user)
+        
+        # Auto-enhance with AI if enabled
+        if self.request.user.context.get_preferences().get('ai_suggestions', True):
+            from apps.ai_module.task_enhancer import enhance_task_async
+            enhance_task_async.delay(task.id)
+        
+        # Sync with Supabase
+        supabase_manager.create_task({
+            'id': str(task.id),
+            'title': task.title,
+            'description': task.description,
+            'priority': task.priority,
+            'status': task.status,
+            'deadline': task.deadline.isoformat() if task.deadline else None,
+            'category': task.category,
+            'user_id': str(task.user.id),
+            'ai_enhanced': task.ai_enhanced,
+            'ai_score': task.ai_score,
+            'created_at': task.created_at.isoformat(),
+            'updated_at': task.updated_at.isoformat(),
+        })
+
+class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        return Task.objects.filter(user=self.request.user)
+    
+    def get_serializer_class(self):
+        if self.request.method in ['PUT', 'PATCH']:
+            return TaskUpdateSerializer
+        return TaskSerializer
+    
+    def perform_update(self, serializer):
+        task = serializer.save()
+        
+        # Sync with Supabase
+        supabase_manager.update_task(str(task.id), {
+            'title': task.title,
+            'description': task.description,
+            'priority': task.priority,
+            'status': task.status,
+            'deadline': task.deadline.isoformat() if task.deadline else None,
+            'category': task.category,
+            'updated_at': task.updated_at.isoformat(),
+        })
+    
+    def perform_destroy(self, instance):
+        # Sync with Supabase
+        supabase_manager.delete_task(str(instance.id))
+        instance.delete()
+
+class AIEnhanceTaskView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request, pk):
+        task = get_object_or_404(Task, pk=pk, user=request.user)
+        
+        try:
+            enhancer = TaskEnhancer()
+            suggestions = enhancer.enhance_task(task)
+            
+            # Create AI task record
+            ai_task, created = AITask.objects.get_or_create(
+                task=task,
+                defaults={
+                    'original_title': task.title,
+                    'original_description': task.description,
+                    **suggestions
+                }
+            )
+            
+            return Response({
+                'success': True,
+                'suggestions': suggestions,
+                'ai_task_id': ai_task.id
+            })
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class BulkActionsView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        action = request.data.get('action')
+        task_ids = request.data.get('task_ids', [])
+        
+        if not action or not task_ids:
+            return Response({
+                'error': 'Action and task_ids are required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        tasks = Task.objects.filter(id__in=task_ids, user=request.user)
+        
+        if action == 'delete':
+            count = tasks.count()
+            for task in tasks:
+                supabase_manager.delete_task(str(task.id))
+            tasks.delete()
+            return Response({
+                'success': True,
+                'message': f'{count} tasks deleted'
+            })
+        
+        elif action == 'update_status':
+            new_status = request.data.get('status')
+            if new_status not in ['pending', 'in_progress', 'completed']:
+                return Response({
+                    'error': 'Invalid status'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            count = tasks.update(status=new_status, updated_at=timezone.now())
+            
+            # Sync with Supabase
+            for task in tasks:
+                supabase_manager.update_task(str(task.id), {
+                    'status': new_status,
+                    'updated_at': timezone.now().isoformat()
+                })
+            
+            return Response({
+                'success': True,
+                'message': f'{count} tasks updated'
+            })
+        
+        return Response({
+            'error': 'Invalid action'
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+class TaskAnalyticsView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        user = request.user
+        tasks = Task.objects.filter(user=user)
+        
+        # Calculate analytics
+        total_tasks = tasks.count()
+        completed_tasks = tasks.filter(status='completed').count()
+        pending_tasks = tasks.filter(status='pending').count()
+        in_progress_tasks = tasks.filter(status='in_progress').count()
+        overdue_tasks = tasks.filter(
+            deadline__lt=timezone.now().date(),
+            status__in=['pending', 'in_progress']
+        ).count()
+        
+        # Priority distribution
+        priority_distribution = tasks.values('priority').annotate(count=Count('id'))
+        
+        # Status distribution
+        status_distribution = tasks.values('status').annotate(count=Count('id'))
+        
+        # Completion rate
+        completion_rate = (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0
+        
+        return Response({
+            'total_tasks': total_tasks,
+            'completed_tasks': completed_tasks,
+            'pending_tasks': pending_tasks,
+            'in_progress_tasks': in_progress_tasks,
+            'overdue_tasks': overdue_tasks,
+            'completion_rate': round(completion_rate, 2),
+            'priority_distribution': list(priority_distribution),
+            'status_distribution': list(status_distribution),
+        })
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-user-cog mr-2"></i>3. Context Views
+                    </h3>
+                    <div class="code-block">
+# apps/context/views.py
+from rest_framework import generics, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .models import UserContext
+from .serializers import UserContextSerializer, ContextUpdateSerializer
+from utils.supabase_client import supabase_manager
+
+class ContextView(generics.RetrieveAPIView):
+    serializer_class = UserContextSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_object(self):
+        context, created = UserContext.objects.get_or_create(
+            user=self.request.user,
+            defaults={
+                'work_schedule': {},
+                'preferences': {},
+                'productivity_patterns': {},
+            }
+        )
+        return context
+
+class ContextUpdateView(generics.UpdateAPIView):
+    serializer_class = ContextUpdateSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_object(self):
+        context, created = UserContext.objects.get_or_create(
+            user=self.request.user,
+            defaults={
+                'work_schedule': {},
+                'preferences': {},
+                'productivity_patterns': {},
+            }
+        )
+        return context
+    
+    def perform_update(self, serializer):
+        context = serializer.save()
+        
+        # Sync with Supabase
+        supabase_manager.client.table('context').upsert({
+            'user_id': str(context.user.id),
+            'work_schedule': context.work_schedule,
+            'preferences': context.preferences,
+            'productivity_patterns': context.productivity_patterns,
+            'updated_at': context.updated_at.isoformat(),
+        }).execute()
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Integration Module -->
+        <div id="ai" class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-6 section-header">
+                <div class="step-number mr-4">6</div>
+                AI Integration Module
+            </h2>
+
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-brain mr-2"></i>1. Task Enhancer
+                    </h3>
+                    <div class="code-block">
+# apps/ai_module/task_enhancer.py
+import openai
+import json
+from django.conf import settings
+from celery import shared_task
+from apps.tasks.models import Task
+from utils.ai_helpers import get_ai_client
+
+openai.api_key = settings.OPENAI_API_KEY
+
+class TaskEnhancer:
+    def __init__(self):
+        self.client = get_ai_client()
+    
+    def enhance_task(self, task):
+        """Enhance task with AI suggestions"""
+        try:
+            # Prepare context
+            context = self._prepare_context(task)
+            
+            # Generate suggestions
+            suggestions = self._generate_suggestions(task, context)
+            
+            return suggestions
+        except Exception as e:
+            print(f"AI Enhancement Error: {e}")
+            return {}
+    
+    def _prepare_context(self, task):
+        """Prepare context for AI enhancement"""
+        user_context = getattr(task.user, 'context', None)
+        
+        context = {
+            'current_task': {
+                'title': task.title,
+                'description': task.description,
+                'priority': task.priority,
+                'category': task.category,
+                'deadline': task.deadline.isoformat() if task.deadline else None,
+            },
+            'user_preferences': user_context.get_preferences() if user_context else {},
+            'work_schedule': user_context.get_work_schedule() if user_context else {},
+            'productivity_patterns': user_context.productivity_patterns if user_context else {},
+        }
+        
+        return context
+    
+    def _generate_suggestions(self, task, context):
+        """Generate AI suggestions for task improvement"""
+        prompt = f"""
+        You are a smart task management AI assistant. Analyze the following task and provide suggestions for improvement.
+
+        Current Task:
+        Title: {task.title}
+        Description: {task.description}
+        Priority: {task.priority}
+        Category: {task.category}
+        Deadline: {task.deadline}
+
+        User Context:
+        {json.dumps(context, indent=2)}
+
+        Please provide suggestions in the following JSON format:
+        {{
+            "suggested_title": "improved title",
+            "title_confidence": 0.85,
+            "suggested_description": "improved description",
+            "description_confidence": 0.90,
+            "suggested_priority": "high/medium/low",
+            "priority_confidence": 0.75,
+            "suggested_deadline": "YYYY-MM-DD",
+            "deadline_confidence": 0.80,
+            "suggested_category": "category name",
+            "category_confidence": 0.85,
+            "reasoning": "explanation of suggestions"
+        }}
+
+        Guidelines:
+        1. Improve clarity and specificity in titles
+        2. Add actionable details to descriptions
+        3. Assess priority based on urgency and importance
+        4. Suggest realistic deadlines based on task complexity
+        5. Categorize based on task type and context
+        6. Provide confidence scores (0.0-1.0)
+        7. Only suggest changes that would genuinely improve the task
+        """
+        
+        try:
+            response = self.client.chat.completions.create(
+                model=settings.AI_MODEL,
+                messages=[
+                    {"role": "system", "content": "You are a smart task management assistant."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.7,
+                max_tokens=1000,
+            )
+            
+            suggestions_text = response.choices[0].message.content
+            suggestions = json.loads(suggestions_text)
+            
+            return suggestions
+            
+        except Exception as e:
+            print(f"AI API Error: {e}")
+            return {}
+
+@shared_task
+def enhance_task_async(task_id):
+    """Async task enhancement"""
+    try:
+        task = Task.objects.get(id=task_id)
+        enhancer = TaskEnhancer()
+        suggestions = enhancer.enhance_task(task)
+        
+        if suggestions:
+            # Create AI task record
+            from apps.tasks.models import AITask
+            AITask.objects.create(
+                task=task,
+                original_title=task.title,
+                original_description=task.description,
+                **suggestions
+            )
+            
+            # Mark task as AI enhanced
+            task.ai_enhanced = True
+            task.ai_score = suggestions.get('title_confidence', 0.0)
+            task.save()
+            
+        return suggestions
+        
+    except Exception as e:
+        print(f"Async enhancement error: {e}")
+        return {}
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-star mr-2"></i>2. Priority Scorer
+                    </h3>
+                    <div class="code-block">
+# apps/ai_module/priority_scorer.py
+import openai
+import json
+from django.conf import settings
+from datetime import datetime, timedelta
+from utils.ai_helpers import get_ai_client
+
+class PriorityScorer:
+    def __init__(self):
+        self.client = get_ai_client()
+    
+    def score_priority(self, task, context=None):
+        """Score task priority using AI and rules"""
+        try:
+            # Rule-based scoring
+            rule_score = self._calculate_rule_based_score(task)
+            
+            # AI-based scoring
+            ai_score = self._calculate_ai_score(task, context)
+            
+            # Combine scores
+            final_score = (rule_score * 0.4) + (ai_score * 0.6)
+            
+            # Convert to priority level
+            priority = self._score_to_priority(final_score)
+            
+            return {
+                'priority': priority,
+                'score': final_score,
+                'rule_score': rule_score,
+                'ai_score': ai_score,
+                'confidence': min(0.9, final_score / 10)  # Normalize confidence
+            }
+            
+        except Exception as e:
+            print(f"Priority scoring error: {e}")
+            return {
+                'priority': 'medium',
+                'score': 5.0,
+                'confidence': 0.5
+            }
+    
+    def _calculate_rule_based_score(self, task):
+        """Calculate priority score based on rules"""
+        score = 5.0  # Base score
+        
+        # Deadline urgency
+        if task.deadline:
+            days_until = (task.deadline - datetime.now().date()).days
+            if days_until <= 1:
+                score += 3.0
+            elif days_until <= 3:
+                score += 2.0
+            elif days_until <= 7:
+                score += 1.0
+            elif days_until > 30:
+                score -= 1.0
+        
+        # Category-based scoring
+        high_priority_keywords = ['urgent', 'important', 'critical', 'deadline', 'meeting']
+        low_priority_keywords = ['someday', 'maybe', 'nice to have', 'optional']
+        
+        task_text = f"{task.title} {task.description}".lower()
+        
+        for keyword in high_priority_keywords:
+            if keyword in task_text:
+                score += 1.0
+                break
+        
+        for keyword in low_priority_keywords:
+            if keyword in task_text:
+                score -= 1.0
+                break
+        
+        # Current priority adjustment
+        if task.priority == 'high':
+            score += 1.0
+        elif task.priority == 'low':
+            score -= 1.0
+        
+        return max(0, min(10, score))
+    
+    def _calculate_ai_score(self, task, context):
+        """Calculate AI-based priority score"""
+        try:
+            prompt = f"""
+            Analyze this task and provide a priority score from 0-10 (10 being highest priority).
+
+            Task: {task.title}
+            Description: {task.description}
+            Current Priority: {task.priority}
+            Deadline: {task.deadline}
+            Category: {task.category}
+
+            Context: {json.dumps(context, indent=2) if context else 'No context available'}
+
+            Consider:
+            1. Urgency (time-sensitive nature)
+            2. Importance (impact on goals)
+            3. Effort required
+            4. Dependencies
+            5. User's work patterns
+
+            Respond with only a number between 0-10 (can include decimals).
+            """
+            
+            response = self.client.chat.completions.create(
+                model=settings.AI_MODEL,
+                messages=[
+                    {"role": "system", "content": "You are a task prioritization expert."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.3,
+                max_tokens=10,
+            )
+            
+            score_text = response.choices[0].message.content.strip()
+            score = float(score_text)
+            
+            return max(0, min(10, score))
+            
+        except Exception as e:
+            print(f"AI priority scoring error: {e}")
+            return 5.0
+    
+    def _score_to_priority(self, score):
+        """Convert numeric score to priority level"""
+        if score >= 7.5:
+            return 'high'
+        elif score >= 4.0:
+            return 'medium'
+        else:
+            return 'low'
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-calendar-alt mr-2"></i>3. Deadline Predictor
+                    </h3>
+                    <div class="code-block">
+# apps/ai_module/deadline_predictor.py
+import openai
+import json
+from datetime import datetime, timedelta
+from django.conf import settings
+from utils.ai_helpers import get_ai_client
+
+class DeadlinePredictor:
+    def __init__(self):
+        self.client = get_ai_client()
+    
+    def predict_deadline(self, task, context=None):
+        """Predict optimal deadline for task"""
+        try:
+            # Rule-based prediction
+            rule_deadline = self._calculate_rule_based_deadline(task)
+            
+            # AI-based prediction
+            ai_deadline = self._calculate_ai_deadline(task, context)
+            
+            # Combine predictions
+            final_deadline = self._combine_predictions(rule_deadline, ai_deadline)
+            
+            return {
+                'suggested_deadline': final_deadline,
+                'rule_deadline': rule_deadline,
+                'ai_deadline': ai_deadline,
+                'confidence': 0.8
+            }
+            
+        except Exception as e:
+            print(f"Deadline prediction error: {e}")
+            return {
+                'suggested_deadline': (datetime.now() + timedelta(days=7)).date(),
+                'confidence': 0.5
+            }
+    
+    def _calculate_rule_based_deadline(self, task):
+        """Calculate deadline based on rules"""
+        base_date = datetime.now().date()
+        
+        # Priority-based timing
+        if task.priority == 'high':
+            days_ahead = 3
+        elif task.priority == 'medium':
+            days_ahead = 7
+        else:
+            days_ahead = 14
+        
+        # Category-based adjustments
+        category_adjustments = {
+            'work': 0,
+            'personal': 2,
+            'health': -1,
+            'education': 3,
+            'finance': -2,
+            'shopping': 1,
+            'maintenance': 5,
+        }
+        
+        category_key = task.category.lower() if task.category else 'work'
+        adjustment = category_adjustments.get(category_key, 0)
+        days_ahead += adjustment
+        
+        # Task complexity estimation
+        complexity_keywords = {
+            'simple': ['call', 'email', 'buy', 'check'],
+            'medium': ['plan', 'research', 'write', 'organize'],
+            'complex': ['develop', 'create', 'analyze', 'implement']
+        }
+        
+        task_text = f"{task.title} {task.description}".lower()
+        
+        for complexity, keywords in complexity_keywords.items():
+            if any(keyword in task_text for keyword in keywords):
+                if complexity == 'simple':
+                    days_ahead = max(1, days_ahead - 2)
+                elif complexity == 'complex':
+                    days_ahead += 5
+                break
+        
+        return base_date + timedelta(days=max(1, days_ahead))
+    
+    def _calculate_ai_deadline(self, task, context):
+        """Calculate AI-based deadline prediction"""
+        try:
+            prompt = f"""
+            Based on this task, suggest an optimal deadline. Consider the task complexity, 
+            priority, and user context.
+
+            Task: {task.title}
+            Description: {task.description}
+            Priority: {task.priority}
+            Category: {task.category}
+            Current Date: {datetime.now().date()}
+
+            Context: {json.dumps(context, indent=2) if context else 'No context available'}
+
+            Provide your response in this format:
+            {{
+                "suggested_days_ahead": 7,
+                "reasoning": "explanation of the timeline"
+            }}
+
+            Consider:
+            1. Task complexity and estimated effort
+            2. Priority level and urgency
+            3. User's work schedule and availability
+            4. Buffer time for unexpected delays
+            5. Dependencies and prerequisites
+            """
+            
+            response = self.client.chat.completions.create(
+                model=settings.AI_MODEL,
+                messages=[
+                    {"role": "system", "content": "You are a project timeline expert."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.5,
+                max_tokens=200,
+            )
+            
+            result_text = response.choices[0].message.content
+            result = json.loads(result_text)
+            
+            days_ahead = result.get('suggested_days_ahead', 7)
+            return datetime.now().date() + timedelta(days=max(1, days_ahead))
+            
+        except Exception as e:
+            print(f"AI deadline prediction error: {e}")
+            return datetime.now().date() + timedelta(days=7)
+    
+    def _combine_predictions(self, rule_deadline, ai_deadline):
+        """Combine rule-based and AI predictions"""
+        # Take average of both predictions
+        rule_days = (rule_deadline - datetime.now().date()).days
+        ai_days = (ai_deadline - datetime.now().date()).days
+        
+        avg_days = (rule_days + ai_days) / 2
+        
+        return datetime.now().date() + timedelta(days=max(1, int(avg_days)))
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-tags mr-2"></i>4. Category Recommender
+                    </h3>
+                    <div class="code-block">
+# apps/ai_module/category_recommender.py
+import openai
+import json
+from django.conf import settings
+from collections import Counter
+from apps.tasks.models import Task
+from utils.ai_helpers import get_ai_client
+
+class CategoryRecommender:
+    def __init__(self):
+        self.client = get_ai_client()
+        self.default_categories = [
+            'Work', 'Personal', 'Health', 'Education', 'Finance', 
+            'Shopping', 'Maintenance', 'Social', 'Travel', 'Hobbies'
+        ]
+    
+    def recommend_category(self, task, user):
+        """Recommend category for task"""
+        try:
+            # Get user's existing categories
+            user_categories = self._get_user_categories(user)
+            
+            # Rule-based recommendation
+            rule_category = self._rule_based_recommendation(task, user_categories)
+            
+            # AI-based recommendation
+            ai_category = self._ai_based_recommendation(task, user_categories)
+            
+            # Combine recommendations
+            final_category = self._combine_recommendations(rule_category, ai_category)
+            
+            return {
+                'suggested_category': final_category,
+                'rule_category': rule_category,
+                'ai_category': ai_category,
+                'confidence': 0.85,
+                'available_categories': user_categories
+            }
+            
+        except Exception as e:
+            print(f"Category recommendation error: {e}")
+            return {
+                'suggested_category': 'Work',
+                'confidence': 0.5,
+                'available_categories': self.default_categories
+            }
+    
+    def _get_user_categories(self, user):
+        """Get user's existing categories"""
+        user_tasks = Task.objects.filter(user=user, category__isnull=False)
+        categories = user_tasks.values_list('category', flat=True)
+        category_counts = Counter(categories)
+        
+        # Combine with default categories
+        all_categories = list(set(list(category_counts.keys()) + self.default_categories))
+        
+        return sorted(all_categories)
+    
+    def _rule_based_recommendation(self, task, user_categories):
+        """Rule-based category recommendation"""
+        task_text = f"{task.title} {task.description}".lower()
+        
+        # Category keywords
+        category_keywords = {
+            'Work': ['meeting', 'project', 'deadline', 'client', 'business', 'office', 'report'],
+            'Personal': ['family', 'friend', 'personal', 'home', 'self'],
+            'Health': ['doctor', 'gym', 'exercise', 'medical', 'health', 'fitness'],
+            'Education': ['learn', 'study', 'course', 'book', 'research', 'training'],
+            'Finance': ['bank', 'money', 'budget', 'investment', 'tax', 'payment'],
+            'Shopping': ['buy', 'purchase', 'shop', 'order', 'grocery', 'store'],
+            'Maintenance': ['fix', 'repair', 'clean', 'maintain', 'service', 'replace'],
+            'Social': ['party', 'event', 'social', 'gathering', 'celebration'],
+            'Travel': ['trip', 'travel', 'vacation', 'flight', 'hotel', 'booking'],
+            'Hobbies': ['hobby', 'fun', 'creative', 'art', 'music', 'game']
+        }
+        
+        # Score each category
+        category_scores = {}
+        for category, keywords in category_keywords.items():
+            if category in user_categories:
+                score = sum(1 for keyword in keywords if keyword in task_text)
+                if score > 0:
+                    category_scores[category] = score
+        
+        # Return highest scoring category
+        if category_scores:
+            return max(category_scores, key=category_scores.get)
+        
+        return 'Work'  # Default category
+    
+    def _ai_based_recommendation(self, task, user_categories):
+        """AI-based category recommendation"""
+        try:
+            prompt = f"""
+            Categorize this task based on its content and the user's available categories.
+
+            Task: {task.title}
+            Description: {task.description}
+            Priority: {task.priority}
+
+            Available Categories: {', '.join(user_categories)}
+
+            Choose the most appropriate category from the available options. 
+            If none fit perfectly, choose the closest match.
+
+            Respond with only the category name.
+            """
+            
+            response = self.client.chat.completions.create(
+                model=settings.AI_MODEL,
+                messages=[
+                    {"role": "system", "content": "You are a task categorization expert."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.3,
+                max_tokens=20,
+            )
+            
+            category = response.choices[0].message.content.strip()
+            
+            # Validate category is in available options
+            if category in user_categories:
+                return category
+            else:
+                # Find closest match
+                category_lower = category.lower()
+                for available_category in user_categories:
+                    if category_lower in available_category.lower() or available_category.lower() in category_lower:
+                        return available_category
+                
+                return 'Work'  # Default fallback
+                
+        except Exception as e:
+            print(f"AI category recommendation error: {e}")
+            return 'Work'
+    
+    def _combine_recommendations(self, rule_category, ai_category):
+        """Combine rule-based and AI recommendations"""
+        # If both agree, use that category
+        if rule_category == ai_category:
+            return rule_category
+        
+        # Prefer AI recommendation for better accuracy
+        return ai_category
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-route mr-2"></i>5. AI Module URLs
+                    </h3>
+                    <div class="code-block">
+# apps/ai_module/urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('suggest/', views.AISuggestView.as_view(), name='ai-suggest'),
+    path('enhance-task/<uuid:task_id>/', views.EnhanceTaskView.as_view(), name='enhance-task'),
+    path('priority-score/', views.PriorityScoreView.as_view(), name='priority-score'),
+    path('predict-deadline/', views.PredictDeadlineView.as_view(), name='predict-deadline'),
+    path('recommend-category/', views.RecommendCategoryView.as_view(), name='recommend-category'),
+]
+
+# apps/ai_module/views.py
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
+from apps.tasks.models import Task
+from .task_enhancer import TaskEnhancer
+from .priority_scorer import PriorityScorer
+from .deadline_predictor import DeadlinePredictor
+from .category_recommender import CategoryRecommender
+
+class AISuggestView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        """Generate AI suggestions for task data"""
+        try:
+            task_data = request.data
+            user = request.user
+            
+            # Create temporary task object for analysis
+            temp_task = Task(
+                title=task_data.get('title', ''),
+                description=task_data.get('description', ''),
+                priority=task_data.get('priority', 'medium'),
+                category=task_data.get('category', ''),
+                user=user
+            )
+            
+            # Get user context
+            context = None
+            if hasattr(user, 'context'):
+                context = {
+                    'preferences': user.context.get_preferences(),
+                    'work_schedule': user.context.get_work_schedule(),
+                    'productivity_patterns': user.context.productivity_patterns,
+                }
+            
+            # Generate suggestions
+            enhancer = TaskEnhancer()
+            priority_scorer = PriorityScorer()
+            deadline_predictor = DeadlinePredictor()
+            category_recommender = CategoryRecommender()
+            
+            suggestions = {
+                'enhancement': enhancer.enhance_task(temp_task),
+                'priority': priority_scorer.score_priority(temp_task, context),
+                'deadline': deadline_predictor.predict_deadline(temp_task, context),
+                'category': category_recommender.recommend_category(temp_task, user),
+            }
+            
+            return Response({
+                'success': True,
+                'suggestions': suggestions
+            })
+            
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class EnhanceTaskView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request, task_id):
+        """Enhance existing task with AI"""
+        task = get_object_or_404(Task, id=task_id, user=request.user)
+        
+        try:
+            enhancer = TaskEnhancer()
+            suggestions = enhancer.enhance_task(task)
+            
+            return Response({
+                'success': True,
+                'suggestions': suggestions
+            })
+            
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class PriorityScoreView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        """Score task priority"""
+        try:
+            task_data = request.data
+            user = request.user
+            
+            temp_task = Task(
+                title=task_data.get('title', ''),
+                description=task_data.get('description', ''),
+                priority=task_data.get('priority', 'medium'),
+                category=task_data.get('category', ''),
+                user=user
+            )
+            
+            scorer = PriorityScorer()
+            result = scorer.score_priority(temp_task)
+            
+            return Response({
+                'success': True,
+                'priority_analysis': result
+            })
+            
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class PredictDeadlineView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        """Predict task deadline"""
+        try:
+            task_data = request.data
+            user = request.user
+            
+            temp_task = Task(
+                title=task_data.get('title', ''),
+                description=task_data.get('description', ''),
+                priority=task_data.get('priority', 'medium'),
+                category=task_data.get('category', ''),
+                user=user
+            )
+            
+            predictor = DeadlinePredictor()
+            result = predictor.predict_deadline(temp_task)
+            
+            return Response({
+                'success': True,
+                'deadline_prediction': result
+            })
+            
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class RecommendCategoryView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        """Recommend task category"""
+        try:
+            task_data = request.data
+            user = request.user
+            
+            temp_task = Task(
+                title=task_data.get('title', ''),
+                description=task_data.get('description', ''),
+                priority=task_data.get('priority', 'medium'),
+                user=user
+            )
+            
+            recommender = CategoryRecommender()
+            result = recommender.recommend_category(temp_task, user)
+            
+            return Response({
+                'success': True,
+                'category_recommendation': result
+            })
+            
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Frontend Integration -->
+        <div id="frontend" class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-6 section-header">
+                <div class="step-number mr-4">7</div>
+                Frontend Integration
+            </h2>
+
+            <div class="warning-box">
+                <h3 class="text-xl font-semibold mb-4">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>Replace localStorage with API Calls
+                </h3>
+                <p>Update your frontend to use the Django REST API instead of localStorage. Here's the updated JavaScript code:</p>
+            </div>
+
+            <div class="code-block">
+// Updated frontend JavaScript for API integration
+class TodoAPI {
+    constructor() {
+        this.baseURL = 'http://localhost:8000/api';
+        this.token = localStorage.getItem('authToken');
+    }
+
+    async getHeaders() {
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${this.token}`
+        };
+    }
+
+    async getTasks(filters = {}) {
+        const params = new URLSearchParams(filters);
+        const response = await fetch(`${this.baseURL}/tasks/?${params}`, {
+            headers: await this.getHeaders()
+        });
+        return response.json();
+    }
+
+    async createTask(taskData) {
+        const response = await fetch(`${this.baseURL}/tasks/`, {
+            method: 'POST',
+            headers: await this.getHeaders(),
+            body: JSON.stringify(taskData)
+        });
+        return response.json();
+    }
+
+    async updateTask(taskId, taskData) {
+        const response = await fetch(`${this.baseURL}/tasks/${taskId}/`, {
+            method: 'PATCH',
+            headers: await this.getHeaders(),
+            body: JSON.stringify(taskData)
+        });
+        return response.json();
+    }
+
+    async deleteTask(taskId) {
+        const response = await fetch(`${this.baseURL}/tasks/${taskId}/`, {
+            method: 'DELETE',
+            headers: await this.getHeaders()
+        });
+        return response.ok;
+    }
+
+    async getAISuggestions(taskData) {
+        const response = await fetch(`${this.baseURL}/ai/suggest/`, {
+            method: 'POST',
+            headers: await this.getHeaders(),
+            body: JSON.stringify(taskData)
+        });
+        return response.json();
+    }
+
+    async enhanceTask(taskId) {
+        const response = await fetch(`${this.baseURL}/ai/enhance-task/${taskId}/`, {
+            method: 'POST',
+            headers: await this.getHeaders()
+        });
+        return response.json();
+    }
+
+    async getUserContext() {
+        const response = await fetch(`${this.baseURL}/context/`, {
+            headers: await this.getHeaders()
+        });
+        return response.json();
+    }
+
+    async updateUserContext(contextData) {
+        const response = await fetch(`${this.baseURL}/context/update/`, {
+            method: 'PATCH',
+            headers: await this.getHeaders(),
+            body: JSON.stringify(contextData)
+        });
+        return response.json();
+    }
+
+    async getTaskAnalytics() {
+        const response = await fetch(`${this.baseURL}/tasks/analytics/`, {
+            headers: await this.getHeaders()
+        });
+        return response.json();
+    }
+}
+
+// Initialize API client
+const todoAPI = new TodoAPI();
+
+// Updated task management functions
+class TaskManager {
+    constructor() {
+        this.tasks = [];
+        this.currentFilter = 'all';
+        this.init();
+    }
+
+    async init() {
+        await this.loadTasks();
+        this.setupEventListeners();
+    }
+
+    async loadTasks() {
+        try {
+            const response = await todoAPI.getTasks();
+            this.tasks = response.results || response;
+            this.renderTasks();
+        } catch (error) {
+            console.error('Error loading tasks:', error);
+            this.showError('Failed to load tasks');
+        }
+    }
+
+    async createTask(taskData) {
+        try {
+            // Get AI suggestions first
+            const aiResponse = await todoAPI.getAISuggestions(taskData);
+            
+            if (aiResponse.success) {
+                const suggestions = aiResponse.suggestions;
+                
+                // Show AI suggestions to user
+                const enhancedData = await this.showAISuggestions(taskData, suggestions);
+                
+                // Create task with enhanced data
+                const newTask = await todoAPI.createTask(enhancedData);
+                this.tasks.push(newTask);
+                this.renderTasks();
+                this.showSuccess('Task created successfully!');
+            } else {
+                // Create task without AI enhancement
+                const newTask = await todoAPI.createTask(taskData);
+                this.tasks.push(newTask);
+                this.renderTasks();
+                this.showSuccess('Task created successfully!');
+            }
+        } catch (error) {
+            console.error('Error creating task:', error);
+            this.showError('Failed to create task');
+        }
+    }
+
+    async updateTask(taskId, taskData) {
+        try {
+            const updatedTask = await todoAPI.updateTask(taskId, taskData);
+            const index = this.tasks.findIndex(t => t.id === taskId);
+            if (index !== -1) {
+                this.tasks[index] = updatedTask;
+                this.renderTasks();
+                this.showSuccess('Task updated successfully!');
+            }
+        } catch (error) {
+            console.error('Error updating task:', error);
+            this.showError('Failed to update task');
+        }
+    }
+
+    async deleteTask(taskId) {
+        try {
+            const success = await todoAPI.deleteTask(taskId);
+            if (success) {
+                this.tasks = this.tasks.filter(t => t.id !== taskId);
+                this.renderTasks();
+                this.showSuccess('Task deleted successfully!');
+            }
+        } catch (error) {
+            console.error('Error deleting task:', error);
+            this.showError('Failed to delete task');
+        }
+    }
+
+    async showAISuggestions(originalData, suggestions) {
+        return new Promise((resolve) => {
+            const modal = document.createElement('div');
+            modal.className = 'modal fade show';
+            modal.style.display = 'block';
+            
+            modal.innerHTML = `
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">AI Suggestions</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Original</h6>
+                                    <p><strong>Title:</strong> ${originalData.title}</p>
+                                    <p><strong>Description:</strong> ${originalData.description}</p>
+                                    <p><strong>Priority:</strong> ${originalData.priority}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>AI Suggestions</h6>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="suggestTitle" checked>
+                                        <label class="form-check-label" for="suggestTitle">
+                                            <strong>Title:</strong> ${suggestions.enhancement?.suggested_title || originalData.title}
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="suggestDescription" checked>
+                                        <label class="form-check-label" for="suggestDescription">
+                                            <strong>Description:</strong> ${suggestions.enhancement?.suggested_description || originalData.description}
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="suggestPriority" checked>
+                                        <label class="form-check-label" for="suggestPriority">
+                                            <strong>Priority:</strong> ${suggestions.priority?.priority || originalData.priority}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="useOriginal">Use Original</button>
+                            <button type="button" class="btn btn-primary" id="useSuggestions">Use Selected Suggestions</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            document.getElementById('useOriginal').onclick = () => {
+                document.body.removeChild(modal);
+                resolve(originalData);
+            };
+            
+            document.getElementById('useSuggestions').onclick = () => {
+                const enhancedData = { ...originalData };
+                
+                if (document.getElementById('suggestTitle').checked) {
+                    enhancedData.title = suggestions.enhancement?.suggested_title || originalData.title;
+                }
+                if (document.getElementById('suggestDescription').checked) {
+                    enhancedData.description = suggestions.enhancement?.suggested_description || originalData.description;
+                }
+                if (document.getElementById('suggestPriority').checked) {
+                    enhancedData.priority = suggestions.priority?.priority || originalData.priority;
+                }
+                
+                document.body.removeChild(modal);
+                resolve(enhancedData);
+            };
+        });
+    }
+
+    renderTasks() {
+        const taskList = document.getElementById('task-list');
+        taskList.innerHTML = '';
+        
+        const filteredTasks = this.filterTasks();
+        
+        filteredTasks.forEach(task => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>
+                    <span class="task-title">${task.title}</span>
+                    ${task.ai_enhanced ? '<span class="badge bg-primary ms-2">AI Enhanced</span>' : ''}
+                </td>
+                <td>
+                    <span class="badge bg-${this.getPriorityColor(task.priority)}">${task.priority}</span>
+                </td>
+                <td>
+                    ${task.deadline ? task.deadline : 'No deadline'}
+                    ${task.is_overdue ? '<span class="badge bg-danger ms-2">Overdue</span>' : ''}
+                </td>
+                <td>
+                    <select class="form-select form-select-sm" onchange="taskManager.updateTaskStatus('${task.id}', this.value)">
+                        <option value="pending" ${task.status === 'pending' ? 'selected' : ''}>Pending</option>
+                        <option value="in_progress" ${task.status === 'in_progress' ? 'selected' : ''}>In Progress</option>
+                        <option value="completed" ${task.status === 'completed' ? 'selected' : ''}>Completed</option>
+                    </select>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary" onclick="taskManager.editTask('${task.id}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-success" onclick="taskManager.enhanceTask('${task.id}')">
+                        <i class="fas fa-magic"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="taskManager.deleteTask('${task.id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            taskList.appendChild(row);
+        });
+    }
+
+    async enhanceTask(taskId) {
+        try {
+            const response = await todoAPI.enhanceTask(taskId);
+            if (response.success) {
+                await this.loadTasks();
+                this.showSuccess('Task enhanced with AI suggestions!');
+            }
+        } catch (error) {
+            console.error('Error enhancing task:', error);
+            this.showError('Failed to enhance task');
+        }
+    }
+
+    async updateTaskStatus(taskId, status) {
+        await this.updateTask(taskId, { status });
+    }
+
+    filterTasks() {
+        if (this.currentFilter === 'all') {
+            return this.tasks;
+        }
+        return this.tasks.filter(task => task.status === this.currentFilter);
+    }
+
+    getPriorityColor(priority) {
+        switch (priority) {
+            case 'high': return 'danger';
+            case 'medium': return 'warning';
+            case 'low': return 'success';
+            default: return 'secondary';
+        }
+    }
+
+    showSuccess(message) {
+        // Implement toast notification
+        this.showToast(message, 'success');
+    }
+
+    showError(message) {
+        // Implement toast notification
+        this.showToast(message, 'danger');
+    }
+
+    showToast(message, type) {
+        const toast = document.createElement('div');
+        toast.className = `toast align-items-center text-white bg-${type} border-0`;
+        toast.setAttribute('role', 'alert');
+        toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">${message}</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        `;
+        
+        document.body.appendChild(toast);
+        const bsToast = new bootstrap.Toast(toast);
+        bsToast.show();
+        
+        setTimeout(() => {
+            if (document.body.contains(toast)) {
+                document.body.removeChild(toast);
+            }
+        }, 5000);
+    }
+
+    setupEventListeners() {
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                this.currentFilter = e.target.dataset.filter;
+                this.renderTasks();
+            });
+        });
+
+        // Create task form
+        document.getElementById('create-task-btn').addEventListener('click', async () => {
+            const taskData = {
+                title: document.getElementById('task-title').value,
+                description: document.getElementById('task-description').value,
+                priority: document.getElementById('task-priority').value,
+                deadline: document.getElementById('task-deadline').value || null,
+                category: document.getElementById('task-category').value || ''
+            };
+            
+            await this.createTask(taskData);
+            
+            // Reset form
+            document.getElementById('task-form').reset();
+            bootstrap.Modal.getInstance(document.getElementById('task-modal')).hide();
+        });
+    }
+}
+
+// Initialize task manager
+const taskManager = new TaskManager();
+            </div>
+        </div>
+
+        <!-- Deployment Guide -->
+        <div id="deployment" class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-6 section-header">
+                <div class="step-number mr-4">8</div>
+                Deployment Guide
+            </h2>
+
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-server mr-2"></i>1. Local Development Setup
+                    </h3>
+                    <div class="code-block">
+# 1. Run migrations
+python manage.py makemigrations
+python manage.py migrate
+
+# 2. Create superuser
+python manage.py createsuperuser
+
+# 3. Collect static files
+python manage.py collectstatic --noinput
+
+# 4. Start Redis server (for Celery)
+redis-server
+
+# 5. Start Celery worker (in new terminal)
+celery -A smart_todo worker --loglevel=info
+
+# 6. Start Celery beat (in new terminal)
+celery -A smart_todo beat --loglevel=info
+
+# 7. Start Django development server
+python manage.py runserver
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fab fa-heroku mr-2"></i>2. Heroku Deployment
+                    </h3>
+                    <div class="code-block">
+# 1. Create Procfile
+web: gunicorn smart_todo.wsgi --log-file -
+worker: celery -A smart_todo worker --loglevel=info
+beat: celery -A smart_todo beat --loglevel=info
+
+# 2. Create runtime.txt
+python-3.11.5
+
+# 3. Update requirements.txt
+pip freeze > requirements.txt
+
+# 4. Create Heroku app
+heroku create smart-todo-app
+
+# 5. Add Heroku PostgreSQL
+heroku addons:create heroku-postgresql:hobby-dev
+
+# 6. Add Redis
+heroku addons:create heroku-redis:hobby-dev
+
+# 7. Set environment variables
+heroku config:set SECRET_KEY=your-secret-key
+heroku config:set DEBUG=False
+heroku config:set SUPABASE_URL=your-supabase-url
+heroku config:set SUPABASE_KEY=your-supabase-key
+heroku config:set OPENAI_API_KEY=your-openai-key
+
+# 8. Deploy
+git add .
+git commit -m "Initial deployment"
+git push heroku main
+
+# 9. Run migrations on Heroku
+heroku run python manage.py migrate
+
+# 10. Create superuser on Heroku
+heroku run python manage.py createsuperuser
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-cloud mr-2"></i>3. Vercel Deployment
+                    </h3>
+                    <div class="code-block">
+# 1. Create vercel.json
+{
+  "builds": [
+    {
+      "src": "smart_todo/wsgi.py",
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "smart_todo/wsgi.py"
+    }
+  ]
+}
+
+# 2. Install Vercel CLI
+npm install -g vercel
+
+# 3. Deploy
+vercel --prod
+
+# 4. Set environment variables in Vercel dashboard
+# - SECRET_KEY
+# - SUPABASE_URL
+# - SUPABASE_KEY
+# - OPENAI_API_KEY
+# - DATABASE_URL (PostgreSQL)
+# - REDIS_URL
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fab fa-docker mr-2"></i>4. Docker Deployment
+                    </h3>
+                    <div class="code-block">
+# Dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+RUN python manage.py collectstatic --noinput
+
+EXPOSE 8000
+
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "smart_todo.wsgi:application"]
+
+# docker-compose.yml
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/smart_todo
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - .:/app
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=smart_todo
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  celery:
+    build: .
+    command: celery -A smart_todo worker --loglevel=info
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/smart_todo
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - .:/app
+
+  celery-beat:
+    build: .
+    command: celery -A smart_todo beat --loglevel=info
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/smart_todo
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - .:/app
+
+volumes:
+  postgres_data:
+
+# Deploy with Docker
+docker-compose up -d
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Testing & Validation -->
+        <div id="testing" class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-6 section-header">
+                <div class="step-number mr-4">9</div>
+                Testing & Validation
+            </h2>
+
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-vial mr-2"></i>1. Unit Tests
+                    </h3>
+                    <div class="code-block">
+# tests/test_models.py
+from django.test import TestCase
+from django.contrib.auth.models import User
+from apps.tasks.models import Task
+from apps.context.models import UserContext
+
+class TaskModelTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='testuser',
+            email='test@example.com',
+            password='testpass123'
+        )
+    
+    def test_task_creation(self):
+        task = Task.objects.create(
+            title='Test Task',
+            description='Test Description',
+            priority='high',
+            user=self.user
+        )
+        self.assertEqual(task.title, 'Test Task')
+        self.assertEqual(task.priority, 'high')
+        self.assertEqual(task.status, 'pending')
+        self.assertEqual(task.user, self.user)
+    
+    def test_task_string_representation(self):
+        task = Task.objects.create(
+            title='Test Task',
+            priority='medium',
+            user=self.user
+        )
+        self.assertEqual(str(task), 'Test Task - medium')
+    
+    def test_is_overdue_property(self):
+        from datetime import date, timedelta
+        
+        # Create overdue task
+        overdue_task = Task.objects.create(
+            title='Overdue Task',
+            deadline=date.today() - timedelta(days=1),
+            user=self.user
+        )
+        self.assertTrue(overdue_task.is_overdue)
+        
+        # Create future task
+        future_task = Task.objects.create(
+            title='Future Task',
+            deadline=date.today() + timedelta(days=1),
+            user=self.user
+        )
+        self.assertFalse(future_task.is_overdue)
+
+# tests/test_views.py
+from django.test import TestCase
+from django.contrib.auth.models import User
+from django.urls import reverse
+from rest_framework.test import APIClient
+from rest_framework import status
+from apps.tasks.models import Task
+
+class TaskAPITests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            username='testuser',
+            email='test@example.com',
+            password='testpass123'
+        )
+        self.client.force_authenticate(user=self.user)
+    
+    def test_create_task(self):
+        url = reverse('task-list-create')
+        data = {
+            'title': 'New Task',
+            'description': 'Task Description',
+            'priority': 'high',
+            'deadline': '2024-12-31'
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Task.objects.count(), 1)
+        self.assertEqual(Task.objects.get().title, 'New Task')
+    
+    def test_get_tasks(self):
+        Task.objects.create(
+            title='Test Task',
+            description='Test Description',
+            user=self.user
+        )
+        
+        url = reverse('task-list-create')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+    
+    def test_update_task(self):
+        task = Task.objects.create(
+            title='Original Title',
+            description='Original Description',
+            user=self.user
+        )
+        
+        url = reverse('task-detail', kwargs={'pk': task.pk})
+        data = {'title': 'Updated Title'}
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        task.refresh_from_db()
+        self.assertEqual(task.title, 'Updated Title')
+    
+    def test_delete_task(self):
+        task = Task.objects.create(
+            title='Task to Delete',
+            user=self.user
+        )
+        
+        url = reverse('task-detail', kwargs={'pk': task.pk})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Task.objects.count(), 0)
+
+# tests/test_ai_module.py
+from django.test import TestCase
+from unittest.mock import patch, MagicMock
+from apps.ai_module.task_enhancer import TaskEnhancer
+from apps.ai_module.priority_scorer import PriorityScorer
+from apps.tasks.models import Task
+from django.contrib.auth.models import User
+
+class AIModuleTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='testuser',
+            email='test@example.com',
+            password='testpass123'
+        )
+        self.task = Task.objects.create(
+            title='Test Task',
+            description='Test Description',
+            priority='medium',
+            user=self.user
+        )
+    
+    @patch('apps.ai_module.task_enhancer.get_ai_client')
+    def test_task_enhancement(self, mock_get_client):
+        # Mock AI client response
+        mock_response = MagicMock()
+        mock_response.choices[0].message.content = '{"suggested_title": "Enhanced Task", "title_confidence": 0.85}'
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_get_client.return_value = mock_client
+        
+        enhancer = TaskEnhancer()
+        suggestions = enhancer.enhance_task(self.task)
+        
+        self.assertIn('suggested_title', suggestions)
+        self.assertEqual(suggestions['suggested_title'], 'Enhanced Task')
+    
+    def test_priority_scoring(self):
+        scorer = PriorityScorer()
+        result = scorer.score_priority(self.task)
+        
+        self.assertIn('priority', result)
+        self.assertIn('score', result)
+        self.assertIn('confidence', result)
+        self.assertIn(result['priority'], ['low', 'medium', 'high'])
+
+# Run tests
+# python manage.py test
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-robot mr-2"></i>2. API Testing Script
+                    </h3>
+                    <div class="code-block">
+# test_api.py
+import requests
+import json
+
+class APITester:
+    def __init__(self, base_url='http://localhost:8000/api'):
+        self.base_url = base_url
+        self.token = None
+    
+    def authenticate(self, username, password):
+        """Authenticate and get token"""
+        url = f"{self.base_url}/auth/login/"
+        data = {"username": username, "password": password}
+        response = requests.post(url, json=data)
+        if response.status_code == 200:
+            self.token = response.json()['token']
+            return True
+        return False
+    
+    def get_headers(self):
+        """Get headers with authentication"""
+        return {
+            'Authorization': f'Token {self.token}',
+            'Content-Type': 'application/json'
+        }
+    
+    def test_create_task(self):
+        """Test task creation"""
+        url = f"{self.base_url}/tasks/"
+        data = {
+            "title": "Test Task",
+            "description": "This is a test task",
+            "priority": "high",
+            "deadline": "2024-12-31"
+        }
+        response = requests.post(url, json=data, headers=self.get_headers())
+        print(f"Create Task: {response.status_code}")
+        if response.status_code == 201:
+            return response.json()
+        return None
+    
+    def test_get_tasks(self):
+        """Test getting tasks"""
+        url = f"{self.base_url}/tasks/"
+        response = requests.get(url, headers=self.get_headers())
+        print(f"Get Tasks: {response.status_code}")
+        if response.status_code == 200:
+            return response.json()
+        return None
+    
+    def test_ai_suggestions(self):
+        """Test AI suggestions"""
+        url = f"{self.base_url}/ai/suggest/"
+        data = {
+            "title": "Buy groceries",
+            "description": "Get milk, bread, and eggs",
+            "priority": "medium"
+        }
+        response = requests.post(url, json=data, headers=self.get_headers())
+        print(f"AI Suggestions: {response.status_code}")
+        if response.status_code == 200:
+            return response.json()
+        return None
+    
+    def test_context_update(self):
+        """Test context update"""
+        url = f"{self.base_url}/context/update/"
+        data = {
+            "preferences": {
+                "notification_enabled": True,
+                "ai_suggestions": True
+            },
+            "work_schedule": {
+                "monday": {"start": "09:00", "end": "17:00", "active": True}
+            }
+        }
+        response = requests.patch(url, json=data, headers=self.get_headers())
+        print(f"Context Update: {response.status_code}")
+        return response.status_code == 200
+    
+    def run_all_tests(self):
+        """Run all API tests"""
+        print("=== API Testing Suite ===")
+        
+        # Test authentication
+        auth_success = self.authenticate('testuser', 'testpass123')
+        print(f"Authentication: {'PASS' if auth_success else 'FAIL'}")
+        
+        if not auth_success:
+            print("Cannot proceed without authentication")
+            return
+        
+        # Test task creation
+        task = self.test_create_task()
+        print(f"Task Creation: {'PASS' if task else 'FAIL'}")
+        
+        # Test task retrieval
+        tasks = self.test_get_tasks()
+        print(f"Task Retrieval: {'PASS' if tasks else 'FAIL'}")
+        
+        # Test AI suggestions
+        ai_result = self.test_ai_suggestions()
+        print(f"AI Suggestions: {'PASS' if ai_result else 'FAIL'}")
+        
+        # Test context update
+        context_success = self.test_context_update()
+        print(f"Context Update: {'PASS' if context_success else 'FAIL'}")
+        
+        print("=== Testing Complete ===")
+
+# Run the tests
+if __name__ == '__main__':
+    tester = APITester()
+    tester.run_all_tests()
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-check-circle mr-2"></i>3. Manual Testing Checklist
+                    </h3>
+                    <div class="success-box">
+                        <h4 class="font-semibold mb-3">Backend API Testing</h4>
+                        <ul class="space-y-2">
+                            <li>☐ Create new task via API</li>
+                            <li>☐ Get all tasks with pagination</li>
+                            <li>☐ Filter tasks by status, priority, search</li>
+                            <li>☐ Update task details</li>
+                            <li>☐ Delete task</li>
+                            <li>☐ Get task analytics</li>
+                            <li>☐ Bulk operations (status update, delete)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="success-box">
+                        <h4 class="font-semibold mb-3">AI Features Testing</h4>
+                        <ul class="space-y-2">
+                            <li>☐ Get AI suggestions for new task</li>
+                            <li>☐ Enhance existing task with AI</li>
+                            <li>☐ Priority scoring accuracy</li>
+                            <li>☐ Deadline prediction reasonableness</li>
+                            <li>☐ Category recommendation accuracy</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="success-box">
+                        <h4 class="font-semibold mb-3">Context Management Testing</h4>
+                        <ul class="space-y-2">
+                            <li>☐ Create/update user context</li>
+                            <li>☐ Work schedule configuration</li>
+                            <li>☐ Preference settings</li>
+                            <li>☐ Productivity pattern tracking</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="success-box">
+                        <h4 class="font-semibold mb-3">Integration Testing</h4>
+                        <ul class="space-y-2">
+                            <li>☐ Supabase synchronization</li>
+                            <li>☐ Redis caching functionality</li>
+                            <li>☐ Celery task processing</li>
+                            <li>☐ OpenAI API integration</li>
+                            <li>☐ Frontend-backend communication</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Troubleshooting -->
+        <div id="troubleshooting" class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-6 section-header">
+                <div class="step-number mr-4">10</div>
+                Troubleshooting
+            </h2>
+
+            <div class="space-y-6">
+                <div class="warning-box">
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>Common Issues & Solutions
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-red-600">Issue: Database Connection Error</h4>
+                            <p class="text-gray-700 mb-2">Solution:</p>
+                            <div class="code-block">
+# Check database configuration
+python manage.py dbshell
+
+# If connection fails, verify:
+# 1. DATABASE_URL in .env file
+# 2. PostgreSQL service is running
+# 3. Database credentials are correct
+# 4. Firewall settings allow connection
+
+# Reset database
+python manage.py reset_db
+python manage.py migrate
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-red-600">Issue: Supabase API Errors</h4>
+                            <p class="text-gray-700 mb-2">Solution:</p>
+                            <div class="code-block">
+# Check Supabase configuration
+# 1. Verify SUPABASE_URL and SUPABASE_KEY
+# 2. Check RLS policies are configured
+# 3. Ensure tables exist in Supabase
+
+# Test connection
+python manage.py shell
+>>> from utils.supabase_client import supabase_manager
+>>> supabase_manager.client.table('tasks').select('*').execute()
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-red-600">Issue: AI Module Not Working</h4>
+                            <p class="text-gray-700 mb-2">Solution:</p>
+                            <div class="code-block">
+# Check OpenAI API key
+# 1. Verify OPENAI_API_KEY in environment
+# 2. Check API key is valid and has credits
+# 3. Ensure model name is correct
+
+# Test AI connection
+python manage.py shell
+>>> import openai
+>>> openai.api_key = 'your-api-key'
+>>> openai.Model.list()
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-red-600">Issue: Celery Tasks Not Processing</h4>
+                            <p class="text-gray-700 mb-2">Solution:</p>
+                            <div class="code-block">
+# Check Redis connection
+redis-cli ping
+
+# Check Celery worker status
+celery -A smart_todo inspect active
+
+# Restart Celery services
+pkill -f "celery worker"
+celery -A smart_todo worker --loglevel=info
+
+# Check task queue
+celery -A smart_todo inspect reserved
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-red-600">Issue: CORS Errors in Frontend</h4>
+                            <p class="text-gray-700 mb-2">Solution:</p>
+                            <div class="code-block">
+# Update CORS settings in settings.py
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://your-frontend-domain.com",
+]
+
+# For development, temporarily allow all origins
+CORS_ALLOW_ALL_ORIGINS = True  # Only for development!
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-red-600">Issue: Migration Errors</h4>
+                            <p class="text-gray-700 mb-2">Solution:</p>
+                            <div class="code-block">
+# Reset migrations
+python manage.py migrate --fake-initial
+python manage.py migrate --fake
+
+# If still failing, reset all migrations
+rm -rf apps/*/migrations/
+python manage.py makemigrations
+python manage.py migrate
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-red-600">Issue: Static Files Not Loading</h4>
+                            <p class="text-gray-700 mb-2">Solution:</p>
+                            <div class="code-block">
+# Collect static files
+python manage.py collectstatic --noinput
+
+# Check static files configuration
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-tools mr-2"></i>Debugging Tools
+                    </h3>
+                    <div class="code-block">
+# Enable Django debug mode
+DEBUG = True
+
+# Use Django debug toolbar
+pip install django-debug-toolbar
+
+# Add to INSTALLED_APPS
+INSTALLED_APPS = [
+    # ... other apps
+    'debug_toolbar',
+]
+
+# Add middleware
+MIDDLEWARE = [
+    # ... other middleware
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+]
+
+# Configure internal IPs
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
+# Log SQL queries
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
+                    </div>
+                </div>
+                
+                <div class="success-box">
+                    <h3 class="text-xl font-semibold mb-4">
+                        <i class="fas fa-heartbeat mr-2"></i>Health Check Endpoints
+                    </h3>
+                    <div class="code-block">
+# Add health check views
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from utils.supabase_client import supabase_manager
+import redis
+
+@csrf_exempt
+def health_check(request):
+    """Basic health check"""
+    return JsonResponse({
+        'status': 'healthy',
+        'timestamp': timezone.now().isoformat()
+    })
+
+@csrf_exempt
+def database_health(request):
+    """Database connectivity check"""
+    try:
+        from django.db import connection
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+        return JsonResponse({'database': 'healthy'})
+    except Exception as e:
+        return JsonResponse({'database': 'unhealthy', 'error': str(e)}, status=500)
+
+@csrf_exempt
+def supabase_health(request):
+    """Supabase connectivity check"""
+    try:
+        result = supabase_manager.client.table('tasks').select('id').limit(1).execute()
+        return JsonResponse({'supabase': 'healthy'})
+    except Exception as e:
+        return JsonResponse({'supabase': 'unhealthy', 'error': str(e)}, status=500)
+
+@csrf_exempt
+def redis_health(request):
+    """Redis connectivity check"""
+    try:
+        r = redis.Redis.from_url(settings.REDIS_URL)
+        r.ping()
+        return JsonResponse({'redis': 'healthy'})
+    except Exception as e:
+        return JsonResponse({'redis': 'unhealthy', 'error': str(e)}, status=500)
+
+# URLs
+urlpatterns = [
+    # ... other patterns
+    path('health/', health_check),
+    path('health/database/', database_health),
+    path('health/supabase/', supabase_health),
+    path('health/redis/', redis_health),
+]
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="bg-gray-800 text-white rounded-lg p-6 text-center">
+            <h3 class="text-2xl font-bold mb-4">
+                <i class="fas fa-rocket mr-2"></i>Your Smart Todo List Backend is Ready!
+            </h3>
+            <p class="text-lg mb-4">
+                You now have a complete Django REST API with Supabase integration and AI-powered features.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                <div class="bg-gray-700 rounded-lg p-4">
+                    <i class="fas fa-database text-3xl mb-2"></i>
+                    <h4 class="font-semibold">Database Ready</h4>
+                    <p class="text-sm">PostgreSQL with Supabase</p>
+                </div>
+                <div class="bg-gray-700 rounded-lg p-4">
+                    <i class="fas fa-brain text-3xl mb-2"></i>
+                    <h4 class="font-semibold">AI Enhanced</h4>
+                    <p class="text-sm">Smart task management</p>
+                </div>
+                <div class="bg-gray-700 rounded-lg p-4">
+                    <i class="fas fa-cloud text-3xl mb-2"></i>
+                    <h4 class="font-semibold">Deploy Ready</h4>
+                    <p class="text-sm">Multiple deployment options</p>
+                </div>
+            </div>
+            <p class="mt-6 text-sm text-gray-300">
+                Follow the deployment guide to get your application live, or continue with local development and testing.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

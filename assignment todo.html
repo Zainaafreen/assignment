@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Smart Todo List</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-indigo-600 text-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-tasks text-2xl mr-3"></i>
+                    <h1 class="text-xl font-bold">Smart Todo List</h1>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#" class="hover:text-indigo-200 transition-colors">Dashboard</a>
+                    <a href="#" class="hover:text-indigo-200 transition-colors">Task Management</a>
+                    <a href="#" class="hover:text-indigo-200 transition-colors">Context Input</a>
+                </div>
+                <button class="md:hidden">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header with Stats -->
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Task Dashboard</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                <div class="bg-white rounded-lg shadow p-6 text-center">
+                    <i class="fas fa-tasks text-blue-500 text-3xl mb-2"></i>
+                    <h3 class="text-2xl font-bold text-gray-800" id="total-tasks">0</h3>
+                    <p class="text-gray-600">Total Tasks</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-6 text-center">
+                    <i class="fas fa-check-circle text-green-500 text-3xl mb-2"></i>
+                    <h3 class="text-2xl font-bold text-gray-800" id="completed-tasks">0</h3>
+                    <p class="text-gray-600">Completed</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-6 text-center">
+                    <i class="fas fa-clock text-yellow-500 text-3xl mb-2"></i>
+                    <h3 class="text-2xl font-bold text-gray-800" id="pending-tasks">0</h3>
+                    <p class="text-gray-600">Pending</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-6 text-center">
+                    <i class="fas fa-exclamation-triangle text-red-500 text-3xl mb-2"></i>
+                    <h3 class="text-2xl font-bold text-gray-800" id="overdue-tasks">0</h3>
+                    <p class="text-gray-600">Overdue</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="bg-white rounded-lg shadow p-6 mb-8">
+            <div class="flex flex-col md:flex-row gap-4 justify-between items-center">
+                <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+                    <button id="add-task-btn" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Add New Task
+                    </button>
+                    <div class="flex gap-2">
+                        <select id="priority-filter" class="border border-gray-300 rounded-lg px-4 py-2">
+                            <option value="">All Priorities</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                        <select id="status-filter" class="border border-gray-300 rounded-lg px-4 py-2">
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                            <option value="overdue">Overdue</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex gap-2 w-full md:w-auto">
+                    <input type="text" id="search-input" placeholder="Search tasks..." class="border border-gray-300 rounded-lg px-4 py-2 flex-1 md:w-64">
+                    <button id="clear-filters" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="hidden text-center py-8">
+            <i class="fas fa-spinner fa-spin text-3xl text-indigo-600"></i>
+            <p class="mt-2 text-gray-600">Loading tasks...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+            <i class="fas fa-exclamation-triangle mr-2"></i>
+            <span id="error-text"></span>
+        </div>
+
+        <!-- Success Message -->
+        <div id="success-message" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span id="success-text"></span>
+        </div>
+
+        <!-- Task List -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Task</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deadline</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="task-list" class="bg-white divide-y divide-gray-200">
+                        <!-- Tasks will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="no-tasks" class="hidden text-center py-8">
+                <i class="fas fa-clipboard-list text-gray-400 text-4xl mb-4"></i>
+                <p class="text-gray-500">No tasks found. Create your first task!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="task-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800" id="modal-title">Create New Task</h3>
+                        <button id="close-modal" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <form id="task-form">
+                        <div class="mb-4">
+                            <label for="task-title" class="block text-sm font-medium text-gray-700 mb-2">Task Title</label>
+                            <input type="text" id="task-title" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                            <div id="title-error" class="text-red-500 text-sm mt-1 hidden"></div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="task-description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                            <textarea id="task-description" rows="3" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" required></textarea>
+                            <div id="description-error" class="text-red-500 text-sm mt-1 hidden"></div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="task-priority" class="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+                            <select id="task-priority" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                                <option value="">Select Priority</option>
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                            <div id="priority-error" class="text-red-500 text-sm mt-1 hidden"></div>
+                        </div>
+                        <div class="mb-6">
+                            <label for="task-deadline" class="block text-sm font-medium text-gray-700 mb-2">Deadline</label>
+                            <input type="date" id="task-deadline" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                            <div id="deadline-error" class="text-red-500 text-sm mt-1 hidden"></div>
+                        </div>
+                        <div class="flex gap-3">
+                            <button type="button" id="cancel-task" class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 transition-colors">Cancel</button>
+                            <button type="submit" id="save-task" class="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors">
+                                <span id="save-text">Create Task</span>
+                                <i id="save-spinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-sm w-full">
+                <div class="p-6">
+                    <div class="text-center">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Delete Task</h3>
+                        <p class="text-gray-600 mb-6">Are you sure you want to delete this task? This action cannot be undone.</p>
+                        <div class="flex gap-3">
+                            <button id="cancel-delete" class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 transition-colors">Cancel</button>
+                            <button id="confirm-delete" class="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Task management class
+        class TaskManager {
+            constructor() {
+                this.tasks = [];
+                this.editingTaskId = null;
+                this.deleteTaskId = null;
+                this.init();
+            }
+
+            init() {
+                this.loadTasks();
+                this.bindEvents();
+                this.renderTasks();
+                this.updateStats();
+                this.loadSampleData();
+            }
+
+            loadSampleData() {
+                if (this.tasks.length === 0) {
+                    const sampleTasks = [
+                        {
+                            id: 1,
+                            title: "Complete project proposal",
+                            description: "Write and submit the final project proposal for Q1",
+                            priority: "high",
+                            deadline: this.formatDate(new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)),
+                            status: "pending",
+                            createdAt: new Date().toISOString()
+                        },
+                        {
+                            id: 2,
+                            title: "Review team performance",
+                            description: "Conduct quarterly performance reviews for all team members",
+                            priority: "medium",
+                            deadline: this.formatDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)),
+                            status: "pending",
+                            createdAt: new Date().toISOString()
+                        },
+                        {
+                            id: 3,
+                            title: "Update website content",
+                            description: "Refresh homepage content and add new testimonials",
+                            priority: "low",
+                            deadline: this.formatDate(new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)),
+                            status: "completed",
+                            createdAt: new Date().toISOString()
+                        },
+                        {
+                            id: 4,
+                            title: "Prepare presentation",
+                            description: "Create slides for client meeting",
+                            priority: "high",
+                            deadline: this.formatDate(new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)),
+                            status: "pending",
+                            createdAt: new Date().toISOString()
+                        }
+                    ];
+                    this.tasks = sampleTasks;
+                    this.saveTasks();
+                    this.renderTasks();
+                    this.updateStats();
+                }
+            }
+
+            formatDate(date) {
+                return date.toISOString().split('T')[0];
+            }
+
+            bindEvents() {
+                // Modal events
+                document.getElementById('add-task-btn').addEventListener('click', () => this.openModal());
+                document.getElementById('close-modal').addEventListener('click', () => this.closeModal());
+                document.getElementById('cancel-task').addEventListener('click', () => this.closeModal());
+                document.getElementById('task-form').addEventListener('submit', (e) => this.handleSubmit(e));
+
+                // Delete modal events
+                document.getElementById('cancel-delete').addEventListener('click', () => this.closeDeleteModal());
+                document.getElementById('confirm-delete').addEventListener('click', () => this.deleteTask());
+
+                // Filter events
+                document.getElementById('priority-filter').addEventListener('change', () => this.filterTasks());
+                document.getElementById('status-filter').addEventListener('change', () => this.filterTasks());
+                document.getElementById('search-input').addEventListener('input', () => this.filterTasks());
+                document.getElementById('clear-filters').addEventListener('click', () => this.clearFilters());
+
+                // Close modal when clicking outside
+                document.getElementById('task-modal').addEventListener('click', (e) => {
+                    if (e.target.id === 'task-modal') this.closeModal();
+                });
+                document.getElementById('delete-modal').addEventListener('click', (e) => {
+                    if (e.target.id === 'delete-modal') this.closeDeleteModal();
+                });
+            }
+
+            openModal(task = null) {
+                this.editingTaskId = task ? task.id : null;
+                const modal = document.getElementById('task-modal');
+                const title = document.getElementById('modal-title');
+                const saveText = document.getElementById('save-text');
+
+                if (task) {
+                    title.textContent = 'Edit Task';
+                    saveText.textContent = 'Update Task';
+                    this.populateForm(task);
+                } else {
+                    title.textContent = 'Create New Task';
+                    saveText.textContent = 'Create Task';
+                    this.resetForm();
+                }
+
+                modal.classList.remove('hidden');
+                document.getElementById('task-title').focus();
+            }
+
+            closeModal() {
+                document.getElementById('task-modal').classList.add('hidden');
+                this.resetForm();
+                this.editingTaskId = null;
+            }
+
+            openDeleteModal(taskId) {
+                this.deleteTaskId = taskId;
+                document.getElementById('delete-modal').classList.remove('hidden');
+            }
+
+            closeDeleteModal() {
+                document.getElementById('delete-modal').classList.add('hidden');
+                this.deleteTaskId = null;
+            }
+
+            populateForm(task) {
+                document.getElementById('task-title').value = task.title;
+                document.getElementById('task-description').value = task.description;
+                document.getElementById('task-priority').value = task.priority;
+                document.getElementById('task-deadline').value = task.deadline;
+            }
+
+            resetForm() {
+                document.getElementById('task-form').reset();
+                this.clearFormErrors();
+            }
+
+            clearFormErrors() {
+                const errorElements = document.querySelectorAll('[id$="-error"]');
+                errorElements.forEach(el => {
+                    el.classList.add('hidden');
+                    el.textContent = '';
+                });
+            }
+
+            showFormError(field, message) {
+                const errorElement = document.getElementById(`${field}-error`);
+                errorElement.textContent = message;
+                errorElement.classList.remove('hidden');
+            }
+
+            validateForm() {
+                this.clearFormErrors();
+                let isValid = true;
+
+                const title = document.getElementById('task-title').value.trim();
+                const description = document.getElementById('task-description').value.trim();
+                const priority = document.getElementById('task-priority').value;
+                const deadline = document.getElementById('task-deadline').value;
+
+                if (!title || title.length < 3) {
+                    this.showFormError('title', 'Task title must be at least 3 characters long');
+                    isValid = false;
+                }
+
+                if (!description || description.length < 10) {
+                    this.showFormError('description', 'Description must be at least 10 characters long');
+                    isValid = false;
+                }
+
+                if (!priority) {
+                    this.showFormError('priority', 'Please select a priority');
+                    isValid = false;
+                }
+
+                if (!deadline) {
+                    this.showFormError('deadline', 'Please select a deadline');
+                    isValid = false;
+                } else {
+                    const today = new Date();
+                    const selectedDate = new Date(deadline);
+                    if (selectedDate < today.setHours(0, 0, 0, 0)) {
+                        this.showFormError('deadline', 'Deadline cannot be in the past');
+                        isValid = false;
+                    }
+                }
+
+                return isValid;
+            }
+
+            async handleSubmit(e) {
+                e.preventDefault();
+                
+                if (!this.validateForm()) return;
+
+                const saveButton = document.getElementById('save-task');
+                const saveText = document.getElementById('save-text');
+                const saveSpinner = document.getElementById('save-spinner');
+
+                // Show loading state
+                saveButton.disabled = true;
+                saveText.classList.add('hidden');
+                saveSpinner.classList.remove('hidden');
+
+                try {
+                    await this.simulateApiCall();
+
+                    const formData = {
+                        title: document.getElementById('task-title').value.trim(),
+                        description: document.getElementById('task-description').value.trim(),
+                        priority: document.getElementById('task-priority').value,
+                        deadline: document.getElementById('task-deadline').value,
+                        status: 'pending'
+                    };
+
+                    if (this.editingTaskId) {
+                        this.updateTask(this.editingTaskId, formData);
+                        this.showMessage('Task updated successfully!', 'success');
+                    } else {
+                        this.createTask(formData);
+                        this.showMessage('Task created successfully!', 'success');
+                    }
+
+                    this.closeModal();
+                    this.renderTasks();
+                    this.updateStats();
+
+                } catch (error) {
+                    this.showMessage('An error occurred. Please try again.', 'error');
+                } finally {
+                    saveButton.disabled = false;
+                    saveText.classList.remove('hidden');
+                    saveSpinner.classList.add('hidden');
+                }
+            }
+
+            createTask(taskData) {
+                const newTask = {
+                    id: Date.now(),
+                    ...taskData,
+                    createdAt: new Date().toISOString()
+                };
+                this.tasks.push(newTask);
+                this.saveTasks();
+            }
+
+            updateTask(taskId, taskData) {
+                const taskIndex = this.tasks.findIndex(task => task.id === taskId);
+                if (taskIndex !== -1) {
+                    this.tasks[taskIndex] = { ...this.tasks[taskIndex], ...taskData };
+                    this.saveTasks();
+                }
+            }
+
+            async deleteTask() {
+                if (!this.deleteTaskId) return;
+
+                try {
+                    await this.simulateApiCall();
+                    this.tasks = this.tasks.filter(task => task.id !== this.deleteTaskId);
+                    this.saveTasks();
+                    this.renderTasks();
+                    this.updateStats();
+                    this.closeDeleteModal();
+                    this.showMessage('Task deleted successfully!', 'success');
+                } catch (error) {
+                    this.showMessage('Failed to delete task. Please try again.', 'error');
+                }
+            }
+
+            toggleTaskStatus(taskId) {
+                const task = this.tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.status = task.status === 'completed' ? 'pending' : 'completed';
+                    this.saveTasks();
+                    this.renderTasks();
+                    this.updateStats();
+                    this.showMessage(`Task marked as ${task.status}!`, 'success');
+                }
+            }
+
+            simulateApiCall() {
+                return new Promise((resolve) => {
+                    setTimeout(resolve, 1000);
+                });
+            }
+
+            showMessage(message, type) {
+                const messageElement = document.getElementById(`${type}-message`);
+                const textElement = document.getElementById(`${type}-text`);
+                
+                textElement.textContent = message;
+                messageElement.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    messageElement.classList.add('hidden');
+                }, 5000);
+            }
+
+            getPriorityColor(priority) {
+                switch (priority) {
+                    case 'high': return 'bg-red-100 text-red-800';
+                    case 'medium': return 'bg-yellow-100 text-yellow-800';
+                    case 'low': return 'bg-green-100 text-green-800';
+                    default: return 'bg-gray-100 text-gray-800';
+                }
+            }
+
+            getStatusColor(status) {
+                switch (status) {
+                    case 'completed': return 'bg-green-100 text-green-800';
+                    case 'pending': return 'bg-blue-100 text-blue-800';
+                    case 'overdue': return 'bg-red-100 text-red-800';
+                    default: return 'bg-gray-100 text-gray-800';
+                }
+            }
+
+            getTaskStatus(task) {
+                if (task.status === 'completed') return 'completed';
+                
+                const today = new Date();
+                const deadline = new Date(task.deadline);
+                
+                if (deadline < today.setHours(0, 0, 0, 0)) {
+                    return 'overdue';
+                }
+                
+                return 'pending';
+            }
+
+            renderTasks() {
+                const taskList = document.getElementById('task-list');
+                const noTasks = document.getElementById('no-tasks');
+                
+                if (this.tasks.length === 0) {
+                    taskList.innerHTML = '';
+                    noTasks.classList.remove('hidden');
+                    return;
+                }
+
+                noTasks.classList.add('hidden');
+                
+                const filteredTasks = this.getFilteredTasks();
+                
+                taskList.innerHTML = filteredTasks.map(task => {
+                    const actualStatus = this.getTaskStatus(task);
+                    const isOverdue = actualStatus === 'overdue';
+                    
+                    return `
+                        <tr class="hover:bg-gray-50 ${isOverdue ? 'bg-red-50' : ''}">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                        <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                                            <i class="fas fa-${task.status === 'completed' ? 'check' : 'clock'} text-indigo-600"></i>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900 ${task.status === 'completed' ? 'line-through' : ''}">${task.title}</div>
+                                        <div class="text-sm text-gray-500">${task.description}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full ${this.getPriorityColor(task.priority)}">
+                                    ${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                ${new Date(task.deadline).toLocaleDateString()}
+                                ${isOverdue ? '<i class="fas fa-exclamation-triangle text-red-500 ml-1"></i>' : ''}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full ${this.getStatusColor(actualStatus)}">
+                                    ${actualStatus.charAt(0).toUpperCase() + actualStatus.slice(1)}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <div class="flex space-x-2">
+                                    <button onclick="taskManager.toggleTaskStatus(${task.id})" 
+                                            class="text-indigo-600 hover:text-indigo-900 transition-colors" 
+                                            title="${task.status === 'completed' ? 'Mark as pending' : 'Mark as completed'}">
+                                        <i class="fas fa-${task.status === 'completed' ? 'undo' : 'check'}"></i>
+                                    </button>
+                                    <button onclick="taskManager.openModal(${JSON.stringify(task).replace(/"/g, '&quot;')})" 
+                                            class="text-blue-600 hover:text-blue-900 transition-colors" 
+                                            title="Edit task">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button onclick="taskManager.openDeleteModal(${task.id})" 
+                                            class="text-red-600 hover:text-red-900 transition-colors" 
+                                            title="Delete task">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            getFilteredTasks() {
+                const priorityFilter = document.getElementById('priority-filter').value;
+                const statusFilter = document.getElementById('status-filter').value;
+                const searchTerm = document.getElementById('search-input').value.toLowerCase();
+
+                return this.tasks.filter(task => {
+                    const actualStatus = this.getTaskStatus(task);
+                    const matchesPriority = !priorityFilter || task.priority === priorityFilter;
+                    const matchesStatus = !statusFilter || actualStatus === statusFilter;
+                    const matchesSearch = !searchTerm || 
+                        task.title.toLowerCase().includes(searchTerm) ||
+                        task.description.toLowerCase().includes(searchTerm);
+
+                    return matchesPriority && matchesStatus && matchesSearch;
+                });
+            }
+
+            filterTasks() {
+                this.renderTasks();
+            }
+
+            clearFilters() {
+                document.getElementById('priority-filter').value = '';
+                document.getElementById('status-filter').value = '';
+                document.getElementById('search-input').value = '';
+                this.renderTasks();
+            }
+
+            updateStats() {
+                const total = this.tasks.length;
+                const completed = this.tasks.filter(task => task.status === 'completed').length;
+                const pending = this.tasks.filter(task => {
+                    const actualStatus = this.getTaskStatus(task);
+                    return actualStatus === 'pending';
+                }).length;
+                const overdue = this.tasks.filter(task => {
+                    const actualStatus = this.getTaskStatus(task);
+                    return actualStatus === 'overdue';
+                }).length;
+
+                document.getElementById('total-tasks').textContent = total;
+                document.getElementById('completed-tasks').textContent = completed;
+                document.getElementById('pending-tasks').textContent = pending;
+                document.getElementById('overdue-tasks').textContent = overdue;
+            }
+
+            loadTasks() {
+                const saved = localStorage.getItem('smart-todo-tasks');
+                if (saved) {
+                    this.tasks = JSON.parse(saved);
+                }
+            }
+
+            saveTasks() {
+                localStorage.setItem('smart-todo-tasks', JSON.stringify(this.tasks));
+            }
+        }
+
+        // Initialize the task manager
+        const taskManager = new TaskManager();
+    </script>
+</body>
+</html>
